@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="manifest" href="/manifest.json">
+    <title>Exercices</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+    li.menu {
+        display:flex;
+        flex-flow: wrap column;
+        padding: 1em;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        width: 200px;
+    }
+
+    .menu > ul {
+        width: fit-content;
+        padding: 1em;
+        border-radius: 2vh 2vh;
+        background: grey;
+        top: 0;
+        left: 0;
+        margin: 0.5em;
+    }
+
+    .exercices{
+        width: 100vw;
+        height: 90vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    
+    .exercice{
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    canvas{
+        background: transparent;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    .next-section{
+        position: absolute;
+        z-index: 10;
+        bottom: 10%;
+        left: 10%;
+        display: flex;
+        flex-flow: wrap row;
+    }
+
+    button{
+        background: rgb(23, 90, 144);
+        color: white;
+        border-radius: 2vh 2vh;
+        padding: 1em;
+        border: none;
+        margin: 0em 1em;
+    }
+
+    .exercice-draw-degree-degree, .exercice-guess-degree-degree{
+        position: absolute;
+        top: 2em;
+        left: 50%;
+        transform: translate(-50%, 0);
+    }
+
+    .exercice-guess-code-canvas2, .exercice-found-palet-canvas2{
+        position: relative;
+        transform: translate(0, 0);
+        top: 0;
+        left: 0;
+    }
+
+    .exercice-guess-code-canvas1, .exercice-found-palet-canvas1{
+        position: relative;
+        transform: translate(0, 0);
+        top: 0;
+        left: 0;
+    }
+
+    .exercice-guess-code-canvases, .exercice-found-palet-canvases{
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-flow: wrap row;
+    }
+
+    .color-picker{
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: 50%;
+        border: solid rgb(84, 8, 8) 1px;
+        background-color: transparent;
+        width: 30px;
+        height: 30px;
+        transform: translate(-50%, -50%);
+        z-index: 99;
+    }
+
+    .exercice-guess-code-colorpicker2, .exercice-found-palet-colorpicker2{
+        width: 30px;
+        border-radius: 0%;
+        border: solid black 3px;
+        height: 20px;
+    }
+
+    .exercice-guess-code-colorDiv, .exercice-found-palet-colorDiv{
+        width: 50px;
+        height: 50px;
+        background: red;
+    }
+
+    .exercice-guess-code-result-wrapper, .exercice-found-palet-result-wrapper{
+        position: absolute;
+        top: 1em;
+        left: 50%;
+        transform: translate(-50%, 0);
+        display: flex;
+        flex-flow: wrap row;
+    }
+
+    .exercice-guess-code-code{
+        font-size: 1em;
+    }
+
+    .exercice-draw-squares-canvases, .exercice-draw-cubes-canvases{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .exercice-draw-squares-canvas, .exercice-draw-cubes-canvas{
+        z-index: 2;
+    }
+
+    .exercice-draw-squares-canvas2, .exercice-draw-cubes-canvas2{
+        z-index: 10;
+    }
+
+    .exercice-draw-squares-canvas, .exercice-draw-squares-canvas2, .exercice-draw-cubes-canvas, .exercice-draw-cubes-canvas2{
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: none;
+    }
+
+    .exercice-draw-squares-shape, .exercice-draw-cubes-shape{
+        position: absolute;
+        left: 50%;
+        top: 1em;
+        transform: translate(-50%, 0);
+    }
+
+</style>
+<body>
+    <li class="menu">
+        <ul class="draw-degree">Draw degree</ul>
+        <ul class="guess-degree">Guess degree</ul>
+        <ul class="guess-code">Guess code</ul>
+        <ul class="found-palet">Found on palet</ul>
+        <ul class="draw-square">Draw squares</ul>
+        <ul class="draw-cube">Draw cubes</ul>
+        <ul class="fullscreen">fullscreen</ul>
+    </li>
+    <div class="exercices">
+        <div class="exercice-draw-degree exercice">
+            <p class="exercice-draw-degree-degree"></p>
+            <canvas class="exercice-draw-degree-canvas"></canvas>
+            <div class="next-section">
+                <button class="exercice-draw-degree-show">show</button>
+                <button class="exercice-draw-degree-next">next</button>
+            </div>
+        </div>
+        <div class="exercice-guess-degree exercice">
+            <p class="exercice-guess-degree-degree"></p>
+            <canvas class="exercice-guess-degree-canvas"></canvas>
+            <div class="next-section">
+                <button class="exercice-guess-degree-show">show</button>
+                <button class="exercice-guess-degree-next">next</button>
+            </div>
+        </div>
+        <div class="exercice-guess-code exercice">
+            <div class="exercice-guess-code-result-wrapper">
+                <div class="exercice-guess-code-colorDiv"></div>
+                <p class="exercice-guess-code-code"></p>
+            </div>
+            <div class="exercice-guess-code-canvases">
+                <div class="exercice-guess-code-colorpicker1 color-picker"></div>
+                <canvas class="exercice-guess-code-canvas1">
+                </canvas>
+                <div class="exercice-guess-code-colorpicker2 color-picker"></div>
+                <canvas class="exercice-guess-code-canvas2">
+                </canvas>
+            </div>
+            <div class="next-section">
+                <button class="exercice-guess-code-show">show</button>
+                <button class="exercice-guess-code-next">next</button>
+            </div>
+        </div>
+        <div class="exercice-found-palet exercice">
+            <div class="exercice-found-palet-result-wrapper">
+                <div class="exercice-found-palet-colorDiv"></div>
+                <p class="exercice-found-palet-code"></p>
+            </div>
+            <div class="exercice-found-palet-canvases">
+                <div class="exercice-found-palet-colorpicker1 color-picker"></div>
+                <canvas class="exercice-found-palet-canvas1">
+                </canvas>
+                <div class="exercice-found-palet-colorpicker2 color-picker"></div>
+                <canvas class="exercice-found-palet-canvas2">
+                </canvas>
+            </div>
+            <div class="next-section">
+                <button class="exercice-found-palet-show">show</button>
+                <button class="exercice-found-palet-next">next</button>
+            </div>
+        </div>
+        
+        <div class="exercice-draw-squares exercice">
+                <div class="exercice-draw-squares-shape"></div>
+                <div class="exercice-draw-squares-canvases">
+                    <canvas class="exercice-draw-squares-canvas"></canvas>
+                    <canvas class="exercice-draw-squares-canvas2"></canvas>
+                </div>
+                
+            <div class="next-section">
+                <button class="exercice-draw-squares-show">show</button>
+                <button class="exercice-draw-squares-next">next</button>
+            </div>
+        </div>
+
+        <div class="exercice-draw-cubes exercice">
+            <div class="exercice-draw-cubes-shape"></div>
+            <div class="exercice-draw-cubes-canvases">
+                <canvas class="exercice-draw-cubes-canvas"></canvas>
+                <canvas class="exercice-draw-cubes-canvas2"></canvas>
+            </div>
+            
+        <div class="next-section">
+            <button class="exercice-draw-cubes-show">show</button>
+            <button class="exercice-draw-cubes-next">next</button>
+        </div>
+    </div>
+        
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script defer>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    }, (error) => {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
+
+        function getDistance(touches) {
+            const [touch1, touch2] = touches;
+            const dx = touch2.clientX - touch1.clientX;
+            const dy = touch2.clientY - touch1.clientY;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        function enterFullscreen() {
+                fullscreen = true;
+                if (document.body.requestFullscreen) {
+                    document.body.requestFullscreen();
+                } else if (document.body.mozRequestFullScreen) {
+                    document.body.mozRequestFullScreen();
+                } else if (canvas.webkitRequestFullscreen) {
+                    document.body.webkitRequestFullscreen();
+                } else if (canvas.msRequestFullscreen) {
+                    document.body.msRequestFullscreen();
+                }
+            }
+
+            function exitFullscreen() {
+                fullscreen = false;
+                if (document.body.exitFullscreen) {
+                    document.body.exitFullscreen();
+                } else if (document.body.mozCancelFullScreen) {
+                    document.body.mozCancelFullScreen();
+                } else if (document.body.webkitExitFullscreen) {
+                    document.body.webkitExitFullscreen();
+                } else if (document.body.msExitFullscreen) {
+                    document.body.msExitFullscreen();
+                }
+            }
+
+            let fullscreen = false;
+
+            document.querySelector(".fullscreen").addEventListener('click', ()=>{
+                if(fullscreen){
+                    exitFullscreen();
+                }
+                else{
+                    enterFullscreen();
+                }
+            });
+
+            // Enter fullscreen on first user interaction
+            document.addEventListener('click', enterFullscreen, { once: true });
+
+        async function renderCubes(canvas, fov=150, drawFirst=true, shape=[1, 1, 1], shift=[0, 0, 0], rotation=[0, 0, 0], z=6){
+                const scene = new THREE.Scene();
+                
+                // Set up the camera
+                const camera = new THREE.PerspectiveCamera(fov, 1, 0.1, 1000);
+                camera.position.z = z;
+
+                // Set up the renderer
+                const renderer = new THREE.WebGLRenderer({canvas: canvas});
+                let dims = canvas.getBoundingClientRect();
+                renderer.setSize(dims.width, dims.height);
+                const group = new THREE.Group();
+                scene.add(group);
+
+                let square = document.createElement("canvas");
+                square.width = 1024;
+                square.height = 1024;
+                let squareCtx = square.getContext("2d");
+                let width = 20;
+                squareCtx.fillStyle = "white";
+                squareCtx.fillRect(0, 0, square.width, square.height);
+                squareCtx.fillStyle = "black";
+                for(let i=0; i<square.width; i++){
+                    squareCtx.fillRect(0, i, width, width);
+                    squareCtx.fillRect(square.width-width, i, width, width);
+                    squareCtx.fillRect(square.width/2-width/2, i, width, width);
+                    
+                    squareCtx.fillRect(i, 0, width, width);
+                    squareCtx.fillRect(i, square.width-width,  width, width);
+                    squareCtx.fillRect(i, square.width/2-width/2,  width, width);
+                    
+                    squareCtx.fillRect(i, i, width, width);
+                    squareCtx.fillRect(i, square.width-i-width,  width, width);
+
+                    
+                }
+
+                squareCtx.beginPath();
+                squareCtx.arc(square.width/2, square.height/2, square.height/2, 0, 2 * Math.PI);
+                squareCtx.lineWidth = width;
+                squareCtx.strokeStyle = 'blue';
+                squareCtx.stroke();
+
+                let img = square.toDataURL('image/png');
+                
+                async function cubeFactory(xShift, yShift, zShift){
+                    
+                    // Load the texture
+                    let cube = null;
+                    const textureLoader = new THREE.TextureLoader();
+                    return await new Promise((res, rej)=>{
+                    textureLoader.load(img, function(texture) {
+                        // Create a box geometry
+                        const geometry = new THREE.BoxGeometry();
+
+                        // Create a material with the loaded texture
+                        const material = new THREE.MeshBasicMaterial({ map: texture });
+                        material.map.minFilter = THREE.LinearMipmapLinearFilter;
+                        material.map.generateMipmaps = true;
+                        renderer.capabilities.getMaxAnisotropy(); // Check maximum available anisotropy
+                        material.map.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+                        // Create a mesh with the geometry and material
+                        cube = new THREE.Mesh(geometry, material);
+                        cube.position.x += xShift * geometry.parameters.width;
+                        cube.position.y += yShift * geometry.parameters.width;
+                        cube.position.z += zShift * geometry.parameters.width;
+
+                        // Add the cube to the scene
+                        //scene.add(cube);
+                        group.add(cube);
+                    
+                        res(cube);
+                    });
+                  });
+                }
+                
+                async function renderAll(drawFirst=true, shape=[1, 1, 1], shift=[0, 0, 0]){
+                    let z = 0;
+                    let j = 0;
+                    let i = 0;
+                        while(z<shape[0]){
+                        j = 0;
+                        while(j<shape[1]){
+                            i = 0;
+                            while(i<shape[2]){
+                                await cubeFactory(
+                                i-shape[2]/2 - shift[2],
+                                j-shape[1]/2 - shift[1],
+                                z-shape[0]/2 - shift[0],
+                                rotation[2],
+                                rotation[1],
+                                rotation[0],
+                            );
+                            i += 1;
+                            if(drawFirst) break;
+                            }
+                        j += 1;
+                        if(drawFirst) break;
+                        }
+                        z += 1;
+                        if(drawFirst) break;
+                    }
+                }
+
+                group.rotation.x += rotation[2];
+                group.rotation.y += rotation[1];
+                group.rotation.z += rotation[0];
+
+                await renderAll(drawFirst, shape, shift);
+     						
+                renderer.render(scene, camera);
+            }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+
+            let max = Math.max(r, g, b);
+            let min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max == min) {
+                h = s = 0; // achromatic
+            } else {
+                let d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+
+            return [h * 360, s * 100, l * 100];
+        }
+
+        function rgbToHsv(r, g, b) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+
+            let max = Math.max(r, g, b);
+            let min = Math.min(r, g, b);
+            let h, s, v = max;
+
+            let d = max - min;
+            s = max === 0 ? 0 : d / max;
+
+            if (max === min) {
+                h = 0; // achromatic
+            } else {
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+
+            return [h * 360, s * 100, v * 100];
+        }
+
+        let exercices = [];
+        let drawDegreeButton = document.querySelector(".draw-degree");
+
+        class DrawDegree{
+            constructor(){
+                this.wrapper = document.querySelector(".exercice-draw-degree");
+                this.canvas = document.querySelector(".exercice-draw-degree-canvas");
+                this.ctx = this.canvas.getContext("2d");
+                this.drawing = false;
+                this.degree = document.querySelector(".exercice-draw-degree-degree");
+                this.degreeValue_ = 0;
+                this.show = document.querySelector(".exercice-draw-degree-show");
+                this.next = document.querySelector(".exercice-draw-degree-next");
+                this.dims = null;
+                this.lastPoint = null;
+                this.thickness = 3;
+                this.addEventListeners();
+            }
+
+            get degreeValue(){
+                return this.degreeValue_;
+            }
+
+            set degreeValue(value){
+                this.degreeValue_ = parseInt(value);
+                this.degree.textContent = `${parseInt(value)}°`;
+            }
+
+            hidden(b){
+                this.wrapper.style.display = b?"none":"block";
+            }
+
+            canvasListen(){
+                this.dims = this.canvas.getBoundingClientRect();
+                
+                let len = Math.min(window.innerWidth, window.innerHeight) - 100;
+                
+                this.canvas.style.width = len+"px";
+                console.log(this.canvas.style.width);
+                this.canvas.style.height = len+"px";
+                this.canvas.width = len;
+                this.canvas.height = len;
+                let width = 5;
+                this.dims = this.canvas.getBoundingClientRect();
+
+                this.canvas.addEventListener("touchstart", e=>{
+                    console.log("pointer down");
+                    this.dims = this.canvas.getBoundingClientRect();
+                    this.drawing = true;
+                    const touch = e.touches[0];
+                    this.lastPoint = [touch.clientX, touch.clientY];
+                });
+                this.canvas.addEventListener("touchmove", e=>{
+                    if(!this.drawing) return;
+                    this.canvas.getContext("2d").fillStyle = "green";
+                    const touch = e.touches[0];
+                    let len = Math.sqrt(Math.pow(touch.clientY - this.lastPoint[1], 2)+Math.pow(touch.clientX - this.lastPoint[0], 2));
+                    len = Math.ceil(len);
+                    let vec = [(touch.clientX - this.lastPoint[0])/len, (touch.clientY - this.lastPoint[1])/len];
+                    
+                    for(let i=0; i<Math.ceil(len); i++){
+                        this.ctx.fillRect(this.lastPoint[0] + i * vec[0] - this.dims.x, this.lastPoint[1] + i * vec[1] - this.dims.y, this.thickness, this.thickness);
+                    }
+                    this.lastPoint = [touch.clientX, touch.clientY];
+                });
+
+                this.canvas.addEventListener("touchend", e=>{
+                    if(!this.drawing) return;
+                    const touch = e.touches[0];
+                    let len = Math.sqrt(Math.pow(touch.clientY - this.lastPoint[1], 2)+Math.pow(touch.clientX - this.lastPoint[0], 2));
+                    len = Math.ceil(len);
+                    let vec = [(touch.clientX - this.lastPoint[0])/len, (touch.clientY - this.lastPoint[1])/len];
+                    
+                    for(let i=0; i<Math.ceil(len); i++){
+                        this.ctx.fillRect(this.lastPoint[0] + i * vec[0] - this.dims.x, this.lastPoint[1] + i * vec[1] - this.dims.y, this.thickness, this.thickness);
+                    }
+                    this.lastPoint = [touch.clientX, touch.clientY];
+                });
+            }
+
+            canvasClear(){
+                this.canvas.getContext("2d").clearRect(0, 0, this.dims.width, this.dims.height);
+                this.canvas.getContext("2d").fillStyle = "red";
+                this.canvas.getContext("2d").fillRect(this.dims.width/2, this.dims.height/2, 5, 5);
+                this.canvas.getContext("2d").fillStyle = "green";
+            }
+
+            goNext(){
+                this.canvasClear();
+                this.degreeValue = Math.random()*360;
+            }
+
+            showDegree(){
+                this.dims = this.canvas.getBoundingClientRect();
+                let middle = [this.dims.width/2, this.dims.height/2];
+                let angle = parseInt(this.degreeValue)/360*2*Math.PI;
+                let vector = [Math.cos(angle), Math.sin(angle)];
+                this.canvas.getContext("2d").fillStyle = "orange";
+                let i = 0;
+                while(
+                    middle[0] <= this.dims.width && middle[0]>=0
+                    && middle[1]<=this.dims.height && middle[1]>=0
+                ){
+                    this.canvas.getContext("2d").fillRect(middle[0], middle[1], this.thickness, this.thickness);
+                    middle[0] += vector[0];
+                    middle[1] -= vector[1];
+                    i+=1;
+                }
+                this.canvas.getContext("2d").fillStyle = "green";
+            }
+
+            addEventListeners(){
+                this.canvasListen();
+                this.next.addEventListener("touchstart", e=>{
+                    this.goNext();
+                });
+                this.show.addEventListener("touchstart", e=>{
+                    this.showDegree();
+                });
+            }
+        }
+        let firstExercice = new DrawDegree();
+        firstExercice.hidden(true);
+        drawDegreeButton.addEventListener("click", e=>{
+            exercices.forEach(exercice => exercice.hidden(true));
+            firstExercice.hidden(false);
+           
+        });
+        exercices.push(firstExercice);
+
+
+        let guessDegreeButton = document.querySelector(".guess-degree");
+
+        class GuessDegree{
+            constructor(){
+                this.wrapper = document.querySelector(".exercice-guess-degree");
+                this.canvas = document.querySelector(".exercice-guess-degree-canvas");
+                this.context = this.canvas.getContext("2d");
+                this.drawing = false;
+                this.degree = document.querySelector(".exercice-guess-degree-degree");
+                this.degreeValue_ = 0;
+                this.show = document.querySelector(".exercice-guess-degree-show");
+                this.next = document.querySelector(".exercice-guess-degree-next");
+                this.dims1 = null;
+                this.dims2 = null;
+                this.thickness = 3;
+                this.addEventListeners();
+            }
+
+            get degreeValue(){
+                return this.degreeValue_;
+            }
+
+            set degreeValue(value){
+                this.degreeValue_ = parseInt(value);
+            }
+
+            hidden(b){
+                this.wrapper.style.display = b?"none":"block";
+            }
+
+            canvasListen(){
+                this.dims = this.canvas.getBoundingClientRect();
+                
+                let len = Math.min(window.innerWidth, window.innerHeight) - 100;
+                
+                this.canvas.style.width = len+"px";
+                console.log(this.canvas.style.width);
+                this.canvas.style.height = len+"px";
+                this.canvas.width = len;
+                this.canvas.height = len;
+
+                this.dims = this.canvas.getBoundingClientRect();
+
+                this.canvas.addEventListener("touchstart", e=>{
+                    console.log("pointer down");
+                    this.drawing = true;
+                });
+                this.canvas.addEventListener("touchmove", e=>{
+                    if(!this.drawing) return;
+                    this.canvas.getContext("2d").fillStyle = "green";
+                    const touch = e.touches[0];
+this.canvas.getContext("2d").fillRect(touch.clientX - this.dims.x, touch.clientY - this.dims.y, width, width);
+                });
+
+                this.canvas.addEventListener("touchend", e=>{
+                    if(!this.drawing) return;
+                    const touch = e.touches[0];
+this.canvas.getContext("2d").fillRect(touch.clientX - this.dims.x, touch.clientY - this.dims.y, this.thickness, this.thickness);
+                    this.drawing = false;
+                });
+            }
+
+            canvasClear(){
+                this.canvas.getContext("2d").clearRect(0, 0, this.dims.width, this.dims.height);
+                this.canvas.getContext("2d").fillStyle = "red";
+                this.canvas.getContext("2d").fillRect(this.dims.width/2, this.dims.height/2, this.thickness, this.thickness);
+                this.canvas.getContext("2d").fillStyle = "green";
+            }
+
+            showDegree(){
+                this.degree.textContent = `${parseInt(this.degreeValue)}°`;
+            }
+
+            goNext(){
+                this.degree.textContent = "";
+                this.degreeValue = Math.random()*360;
+                this.canvasClear();
+                let middle = [this.dims.width/2, this.dims.height/2];
+                let angle = parseInt(this.degreeValue)/360*2*Math.PI;
+                let vector = [Math.cos(angle), Math.sin(angle)];
+                let i = 0;
+                while(
+                    middle[0] <= this.dims.width && middle[0]>=0
+                    && middle[1]<=this.dims.height && middle[1]>=0
+                ){
+                    this.canvas.getContext("2d").fillRect(middle[0], middle[1], 5, 5);
+                    middle[0] += vector[0];
+                    middle[1] -= vector[1];
+                    i+=1;
+                }
+            }
+
+            addEventListeners(){
+                this.canvasListen();
+                this.next.addEventListener("click", e=>{
+                    this.goNext();
+                });
+                this.show.addEventListener("click", e=>{
+                    this.showDegree();
+                });
+            }
+        }
+        let secondExercice = new GuessDegree();
+        secondExercice.hidden(true);
+        guessDegreeButton.addEventListener("click", e=>{
+            exercices.forEach(exercice => exercice.hidden(true));
+            secondExercice.hidden(false);
+        });
+
+        exercices.push(secondExercice);
+
+
+        
+        let guessColorButton = document.querySelector(".guess-code");
+
+        class GuessColor{
+            constructor(){
+                this.wrapper = document.querySelector(".exercice-guess-code");
+                this.wrapperColor = document.querySelector(".exercice-guess-code-canvases");
+                this.canvas1 = document.querySelector(".exercice-guess-code-canvas1");
+                this.canvas2 = document.querySelector(".exercice-guess-code-canvas2");
+                this.colorPicker2 = document.querySelector(".exercice-guess-code-colorpicker2");
+                this.colorPicker1 = document.querySelector(".exercice-guess-code-colorpicker1");
+                this.colorDiv = document.querySelector(".exercice-guess-code-colorDiv");
+                this.ctx1 = this.canvas1.getContext("2d");
+                this.ctx2 = this.canvas2.getContext("2d");
+                this.drawing = false;
+                this.code = document.querySelector(".exercice-guess-code-code");
+                this.degreeValue_ = 0;
+                this.show = document.querySelector(".exercice-guess-code-show");
+                this.next = document.querySelector(".exercice-guess-code-next");
+                this.dims = null;
+                this.dims2 = null;
+                this.color_ = [255, 0, 0];
+                this.colorBuffer = this.initHue();
+                this.drawHue(this.colorBuffer);
+                this.drawSatLight();
+                this.movePicker1();
+                this.movePicker2();
+                this.addEventListeners();
+            }
+
+            get color(){
+                return "rgba("+this.color_.join(", ")+", 255)";
+            }
+
+            get colorHSL(){
+                return rgbToHsl(...this.color_);
+            }
+
+            setColor(...value){
+                this.color_ = [...value];
+                this.colorDiv.style.background = this.color;
+            }
+
+            movePicker1(){
+                let hsl = this.colorHSL;
+                console.log("hsl piker 1 ", hsl);
+                let xRelativeToCanvas = hsl[1]/100*this.dims1.width;
+                let yRelativeToCanvas = this.dims1.height-hsl[2]/100*this.dims1.height;
+                this.colorPicker1.style.left = xRelativeToCanvas + "px";
+                this.colorPicker1.style.top = yRelativeToCanvas + "px";
+            }
+
+            movePicker2(){
+                let hsl = this.colorHSL;
+                let y = Math.abs(hsl[0])/360*this.dims2.height;
+                let x = (this.dims1.width + this.dims2.width/2);
+                
+                this.colorPicker2.style.left = x + "px";
+                this.colorPicker2.style.top = y + "px";
+                console.log("picker 2 "+x+ " "+this.colorPicker2.style.left);
+            }
+
+            drawSatLight(){
+                let hsl = this.colorHSL;
+                let grad=this.ctx1.createLinearGradient(0,0, this.canvas1.width,0);
+                grad.addColorStop(0, "white");
+                console.log(Math.floor(Math.abs(hsl[0])/360*this.colorBuffer.length));
+                console.log(this.colorBuffer.length);
+                let tempHue = this.colorBuffer[Math.ceil(Math.abs(hsl[0])/360*this.colorBuffer.length)];
+                let tempHueString = "rgba("+ tempHue.join(", ")+")";
+                grad.addColorStop(1, tempHueString);
+                this.ctx1.fillStyle = grad;
+                this.ctx1.fillRect(0,0, this.canvas1.width, this.canvas2.height);
+
+                grad=this.ctx1.createLinearGradient(0,0, 0, this.canvas1.height);
+                grad.addColorStop(0, "rgba(0, 0, 0, 0)");
+                grad.addColorStop(1, "rgba(0, 0, 0, 255)");
+                this.ctx1.fillStyle = grad;
+                this.ctx1.fillRect(0,0, this.canvas1.width, this.canvas2.height);
+            }
+
+            get degreeValue(){
+                return this.degreeValue_;
+            }
+
+            set degreeValue(value){
+                this.degreeValue_ = parseInt(value);
+            }
+
+            hidden(b){
+                this.wrapper.style.display = b?"none":"block";
+            }
+
+            initHue(){
+                let colorBuffer = [];
+                this.dims1 = this.canvas1.getBoundingClientRect();
+                
+                let len = Math.min(window.innerWidth, window.innerHeight) - 100;
+                
+                this.canvas1.style.width = len+"px";
+                console.log(this.canvas1.style.width);
+                this.canvas1.style.height = len+"px";
+                this.canvas1.width = len;
+                this.canvas1.height = len;
+
+                this.dims1 = this.canvas1.getBoundingClientRect();
+
+                let width2 = 30;
+                this.canvas2.style.width = width2+"px";
+                console.log(this.canvas2.style.width);
+                this.canvas2.style.height = len+"px";
+                this.canvas2.width = width2;
+                this.canvas2.height = len;
+
+                this.dims2 = this.canvas2.getBoundingClientRect();
+
+                this.wrapperColor.style.width = (len + width2 )+ "px";
+                this.wrapperColor.style.height = len + "px";
+
+                let hueBuffer = [255, 0, 0];
+                let hueIndex = 1;
+                let nextHueBuffer = () => hueIndex = (hueIndex+1)%hueBuffer.length;
+                let shouldIncrement = true;
+                let i = 0;
+
+                while(true){
+                    let currentHue = hueBuffer[hueIndex];
+                    let previousIndex = ((hueIndex - 1) == -1 ? 2 : (hueIndex -1)) % hueBuffer.length;
+                    let previousHue = hueBuffer[previousIndex];
+                    
+                    if(shouldIncrement && currentHue == 255 && previousHue == 255){
+                        shouldIncrement = false;
+                        continue;
+                    }
+
+                    if(shouldIncrement){
+                        if(hueBuffer[hueIndex] < 255){
+                            hueBuffer[hueIndex] += 1;
+                        }
+                        else
+                        {
+                            nextHueBuffer();
+                        }
+                    }
+                    else{
+                        if(hueBuffer[previousIndex] > 0){
+                            hueBuffer[previousIndex] -= 1;
+                        }
+                        else
+                        {
+                            nextHueBuffer();
+                            shouldIncrement = true;
+                        } 
+                    }
+
+                    colorBuffer.push([...hueBuffer]);
+                    i += 1;
+                    if(i > 6*256) break;
+                }
+                console.log(colorBuffer);
+                return colorBuffer;
+            }
+
+            canvasClear(){
+                this.canvas.getContext("2d").clearRect(0, 0, this.dims.width, this.dims.height);
+                this.canvas.getContext("2d").fillStyle = "red";
+                this.canvas.getContext("2d").fillRect(this.dims.width/2, this.dims.height/2, 5, 5);
+                this.canvas.getContext("2d").fillStyle = "green";
+            }
+
+            drawHue(){
+                const grad=this.canvas2.getContext("2d").createLinearGradient(0,0, 0, this.dims2.height);
+               
+                for(let i=0; i<this.colorBuffer.length; i++){
+                    grad.addColorStop(i/this.colorBuffer.length, "rgba("+(this.colorBuffer[i].join(", "))+")");
+                }
+                this.canvas2.getContext("2d").fillStyle = grad;
+                this.canvas2.getContext("2d").fillRect(0, 0, this.dims2.width, this.dims2.height);
+            }
+
+            showColor(){
+                this.code.textContent = `RGB : ${this.color_.map(e=>Math.ceil(e)).join(", ")}, HSL : ${rgbToHsl(...this.color_).map(e=>Math.ceil(e)).join(", ")}°`;
+            }
+
+            goNext(){
+                this.code.textContent = "";
+                this.setColor(Math.random()*255, Math.random()*255, Math.random()*255);
+                this.drawSatLight();
+                this.movePicker1();
+                this.movePicker2();
+            }
+
+            addEventListeners(){
+                this.next.addEventListener("click", e=>{
+                    this.goNext();
+                });
+                this.show.addEventListener("click", e=>{
+                    this.showColor();
+                });
+            }
+        }
+        let thirdExercice = new GuessColor();
+        thirdExercice.hidden(true);
+        guessColorButton.addEventListener("click", e=>{
+            exercices.forEach(exercice => exercice.hidden(true));
+            thirdExercice.hidden(false);
+        });
+
+        exercices.push(thirdExercice);
+
+        ///----------------------------
+
+        let foundPaletButton = document.querySelector(".found-palet");
+
+        class FoundPalet{
+            constructor(){
+                this.wrapper = document.querySelector(".exercice-found-palet");
+                this.wrapperColor = document.querySelector(".exercice-found-palet-canvases");
+                this.canvas1 = document.querySelector(".exercice-found-palet-canvas1");
+                this.canvas2 = document.querySelector(".exercice-found-palet-canvas2");
+                this.colorPicker2 = document.querySelector(".exercice-found-palet-colorpicker2");
+                this.colorPicker1 = document.querySelector(".exercice-found-palet-colorpicker1");
+                this.colorDiv = document.querySelector(".exercice-found-palet-colorDiv");
+                this.ctx1 = this.canvas1.getContext("2d", { willReadFrequently: true });
+                this.ctx2 = this.canvas2.getContext("2d",{ willReadFrequently: true });
+                this.moving1 = false;
+                this.moving2 = false;
+                this.code = document.querySelector(".exercice-found-palet-code");
+                this.show = document.querySelector(".exercice-found-palet-show");
+                this.next = document.querySelector(".exercice-found-palet-next");
+                this.dims = null;
+                this.dims2 = null;
+                this.color_ = [255, 0, 0];
+                this.colorTarget = [255, 0, 0];
+                this.lastMove = null;
+                this.colorBuffer = this.initHue();
+                console.log(this.dims1);
+                this.drawHue(this.colorBuffer);
+                this.drawSatLight();
+                this.movePicker1();
+                this.movePicker2();
+                this.addEventListeners();
+            }
+
+            get color(){
+                return "rgba("+this.color_.join(", ")+", 255)";
+            }
+
+            get colorHSL(){
+                return rgbToHsl(...this.color_);
+            }
+
+            setColor(...value){
+                this.color_ = [...value];
+                this.colorDiv.style.background = this.color;
+            }
+
+            movePicker1(){
+                let hsl = this.colorHSL;
+                console.log("hsl piker 1 ", hsl);
+                let xRelativeToCanvas = hsl[1]/100*this.dims1.width;
+                let yRelativeToCanvas = this.dims1.height-hsl[2]/100*this.dims1.height;
+                this.colorPicker1.style.left = xRelativeToCanvas + "px";
+                this.colorPicker1.style.top = yRelativeToCanvas + "px";
+            }
+
+            movePicker2(){
+                let hsl = this.colorHSL;
+                let y = Math.abs(hsl[0])/360*this.dims2.height;
+                let x = (this.dims1.width + this.dims2.width/2);
+                
+                this.colorPicker2.style.left = x + "px";
+                this.colorPicker2.style.top = y + "px";
+                console.log("picker 2 "+x+ " "+this.colorPicker2.style.left);
+            }
+
+            drawSatLight(hue=null){
+                let hsl = this.colorHSL;
+                let grad=this.ctx1.createLinearGradient(0,0, this.canvas1.width,0);
+                grad.addColorStop(0, "white");
+                console.log(Math.floor(Math.abs(hsl[0])/360*this.colorBuffer.length));
+                console.log(this.colorBuffer.length);
+                let tempHue = hue!=null?hue:this.colorBuffer[Math.ceil(Math.abs(hsl[0])/360*this.colorBuffer.length)];
+                let tempHueString = "rgba("+ tempHue.join(", ")+")";
+                grad.addColorStop(1, tempHueString);
+                this.ctx1.fillStyle = grad;
+                this.ctx1.fillRect(0,0, this.canvas1.width, this.canvas2.height);
+
+                grad=this.ctx1.createLinearGradient(0,0, 0, this.canvas1.height);
+                grad.addColorStop(0, "rgba(0, 0, 0, 0)");
+                grad.addColorStop(1, "rgba(0, 0, 0, 255)");
+                this.ctx1.fillStyle = grad;
+                this.ctx1.fillRect(0,0, this.canvas1.width, this.canvas2.height);
+            }
+
+            get degreeValue(){
+                return this.degreeValue_;
+            }
+
+            set degreeValue(value){
+                this.degreeValue_ = parseInt(value);
+            }
+
+            hidden(b){
+                this.wrapper.style.display = b?"none":"block";
+            }
+
+            initHue(){
+                let colorBuffer = [];
+                this.dims1 = this.canvas1.getBoundingClientRect();
+                
+                let len = Math.min(window.innerWidth, window.innerHeight) - 100;
+                
+                this.canvas1.style.width = len+"px";
+                console.log(this.canvas1.style.width);
+                this.canvas1.style.height = len+"px";
+                this.canvas1.width = len;
+                this.canvas1.height = len;
+
+                this.dims1 = this.canvas1.getBoundingClientRect();
+
+                let width2 = 30;
+                this.canvas2.style.width = width2+"px";
+                console.log(this.canvas2.style.width);
+                this.canvas2.style.height = len+"px";
+                this.canvas2.width = width2;
+                this.canvas2.height = len;
+
+                this.wrapperColor.style.width = (len + width2 )+ "px";
+                this.wrapperColor.style.height = len + "px";
+
+                this.dims1 = this.canvas1.getBoundingClientRect();
+                this.dims2 = this.canvas2.getBoundingClientRect();
+
+                let hueBuffer = [255, 0, 0];
+                let hueIndex = 1;
+                let nextHueBuffer = () => hueIndex = (hueIndex+1)%hueBuffer.length;
+                let shouldIncrement = true;
+                let i = 0;
+
+                while(true){
+                    let currentHue = hueBuffer[hueIndex];
+                    let previousIndex = ((hueIndex - 1) == -1 ? 2 : (hueIndex -1)) % hueBuffer.length;
+                    let previousHue = hueBuffer[previousIndex];
+                    
+                    if(shouldIncrement && currentHue == 255 && previousHue == 255){
+                        shouldIncrement = false;
+                        continue;
+                    }
+
+                    if(shouldIncrement){
+                        if(hueBuffer[hueIndex] < 255){
+                            hueBuffer[hueIndex] += 1;
+                        }
+                        else
+                        {
+                            nextHueBuffer();
+                        }
+                    }
+                    else{
+                        if(hueBuffer[previousIndex] > 0){
+                            hueBuffer[previousIndex] -= 1;
+                        }
+                        else
+                        {
+                            nextHueBuffer();
+                            shouldIncrement = true;
+                        } 
+                    }
+
+                    colorBuffer.push([...hueBuffer]);
+                    i += 1;
+                    if(i > 6*256) break;
+                }
+                console.log(colorBuffer);
+                return colorBuffer;
+            }
+
+            setColorFromPicker1(){
+                let {data} = this.ctx1.getImageData(parseInt(this.colorPicker1.style.left), parseInt(this.colorPicker1.style.top), 1, 1);
+                this.setColor(...data.slice(0, 3));
+                this.ctx1.fillRect(parseInt(this.colorPicker1.style.left), parseInt(this.colorPicker1.style.top), 2, 2);
+                console.log("get color ", data);
+            }
+
+            setColorFromPicker2(){
+                let {data} = this.ctx2.getImageData(parseInt(this.dims2.width)/2, parseInt(this.colorPicker2.style.top), 1, 1);
+                this.drawSatLight(data.slice(0, 3));
+                this.setColor(...data.slice(0, 3));
+                console.log("get color ", data);
+            }
+
+            canvasListen(){
+                this.canvas1.addEventListener("touchstart", e=>{
+                    this.dims1 = this.canvas1.getBoundingClientRect();
+                    this.moving1 = true;
+                    let x = e.touches[0].clientX - this.dims1.x;
+                    let y = e.touches[0].clientY - this.dims1.y;
+                    
+                    if(x < 0) x = 0;
+                    if(x > this.dims1.width) x = this.dims1.width;
+                    if(y < 0) y = 0;
+                    if(y > this.dims1.height) y = this.dims1.height;
+
+                    this.colorPicker1.style.left = x + "px";
+                    this.colorPicker1.style.top = y + "px";
+
+                    this.setColorFromPicker1();
+                });
+
+                this.canvas2.addEventListener("touchstart", e=>{
+                    this.dims2 = this.canvas2.getBoundingClientRect();
+                    this.moving2 = true;
+                    let y = e.touches[0].clientY - this.dims1.y;
+                    
+                    if(y < 0) y = 0;
+                    if(y > this.dims2.height) y = this.dims2.height;
+
+                    this.colorPicker2.style.top = y + "px";
+
+                    this.setColorFromPicker2();
+                });
+
+                this.canvas1.addEventListener("touchend", e=>{
+                    this.moving1 = false;
+                    
+                });
+
+                this.canvas2.addEventListener("touchend", e=>{
+                    this.moving2 = false;
+                });
+            }
+
+            canvasClear(){
+                this.canvas.getContext("2d").clearRect(0, 0, this.dims.width, this.dims.height);
+                this.canvas.getContext("2d").fillStyle = "red";
+                this.canvas.getContext("2d").fillRect(this.dims.width/2, this.dims.height/2, 5, 5);
+                this.canvas.getContext("2d").fillStyle = "green";
+            }
+
+            drawHue(){
+                const grad=this.canvas2.getContext("2d").createLinearGradient(0,0, 0, this.dims2.height);
+               
+                for(let i=0; i<this.colorBuffer.length; i++){
+                    grad.addColorStop(i/this.colorBuffer.length, "rgba("+(this.colorBuffer[i].join(", "))+")");
+                }
+                this.canvas2.getContext("2d").fillStyle = grad;
+                this.canvas2.getContext("2d").fillRect(0, 0, this.dims2.width, this.dims2.height);
+            }
+
+            showColor(){
+                let hsl = rgbToHsl(...this.colorTarget);
+                this.colorPicker2.style.top = hsl[0]/360*this.dims2.height+"px";
+                this.colorPicker1.style.left = hsl[1]/100*this.dims1.width+"px";
+                this.colorPicker1.style.top = hsl[2]/100*this.dims2.height+"px";
+                this.setColorFromPicker2();
+            }
+
+            goNext(){
+                this.colorTarget = [Math.random() * 255, Math.random() * 255, Math.random() * 255];
+                this.code.textContent = `RGB : ${this.colorTarget.map(e=>Math.ceil(e)).join(", ")}, HSL : ${rgbToHsl(...this.colorTarget).map(e=>Math.ceil(e)).join(", ")}`;
+            }
+
+            addEventListeners(){
+                this.canvasListen();
+                this.next.addEventListener("click", e=>{
+                    this.goNext();
+                });
+                this.show.addEventListener("click", e=>{
+                    this.showColor();
+                });
+            }
+        }
+        let fourthExercice = new FoundPalet();
+        fourthExercice.hidden(true);
+        foundPaletButton.addEventListener("click", e=>{
+            exercices.forEach(exercice => exercice.hidden(true));
+            fourthExercice.hidden(false);
+        });
+
+        exercices.push(fourthExercice);
+
+
+        let drawSquareButton = document.querySelector(".draw-square");
+
+        class DrawSquare{
+            constructor(){
+                this.canvas = document.querySelector(".exercice-draw-squares-canvas");
+                this.canvas2 = document.querySelector(".exercice-draw-squares-canvas2");
+                this.ctx2 = this.canvas2.getContext("2d");
+                this.canvases = document.querySelector(".exercice-draw-squares-canvases");
+                this.dims = null;
+                this.wrapper = document.querySelector(".exercice-draw-squares");
+                this.num = document.querySelector(".exercice-draw-squares-shape");
+                this.next = document.querySelector(".exercice-draw-squares-next");
+                this.show = document.querySelector(".exercice-draw-squares-show");
+                this.drawing = false;
+                this.lastPoint = null;
+                
+                this.shape = [1, 2, 2];
+                this.shift = [0, 0, 0];
+                this.rotation = [0, 0.3, 0];
+                this.fov = 100;
+                this.thickness = 2;
+                this.canvasListen();
+                this.addEventListeners();
+            }
+
+            hidden(h){
+                this.wrapper.style.display = h?"none":"block";
+            }
+
+            canvasListen(){
+                this.dims = this.canvas.getBoundingClientRect();
+                
+                let len = Math.min(window.innerWidth, window.innerHeight) - 100;
+                
+                this.canvases.style.width = len+"px";
+                this.canvases.style.height = len+"px";
+
+                this.canvas2.style.width = len+"px";
+                this.canvas2.style.height = len+"px";
+                this.canvas2.width = len;
+                this.canvas2.height = len;
+
+                this.canvas.style.width = len+"px";
+                this.canvas.style.height = len+"px";
+                this.canvas.width = len;
+                this.canvas.height = len;
+                this.canvas.style.backgroundColor = 'transparent';
+
+                this.dims = this.canvas.getBoundingClientRect();
+
+                this.canvas2.addEventListener("touchstart", e=>{
+                    console.log("pointer down");
+                    this.drawing = true;
+                    this.lastPoint = [e.touches[0].clientX, e.touches[0].clientY];
+                });
+                this.canvas2.addEventListener("touchmove", e=>{
+                    if(!this.drawing) return;
+                    this.ctx2.fillStyle = "green";
+                    let len = Math.sqrt(Math.pow(e.touches[0].clientY - this.lastPoint[1], 2)+Math.pow(e.touches[0].clientX - this.lastPoint[0], 2));
+                    len = Math.ceil(len);
+                    const touch = e.touches[0];
+                    let vec = [(touch.clientX - this.lastPoint[0])/len, (touch.clientY - this.lastPoint[1])/len];
+                    
+                    for(let i=0; i<Math.ceil(len); i++){
+                        this.ctx2.fillRect(this.lastPoint[0] + i * vec[0] - this.dims.x, this.lastPoint[1] + i * vec[1] - this.dims.y, this.thickness, this.thickness);
+                    }
+                    this.lastPoint = [e.touches[0].clientX, e.touches[0].clientY];
+                    //this.ctx2.fillRect(e.clientX - this.dims.x, e.clientY - this.dims.y, thickness, thickness);
+                });
+
+                this.canvas2.addEventListener("touchend", e=>{
+                    if(!this.drawing) return;
+                    const touch = e.touches[0];
+                    this.ctx2.fillRect(touch.clientX - this.dims.x, touch.clientY - this.dims.y, this.thickness, this.thickness);
+                    this.drawing = false;
+                });
+            }
+
+            async goNext(){
+                this.dims = this.canvas.getBoundingClientRect();
+                this.ctx2.clearRect(0, 0, this.dims.width, this.dims.height);
+                this.shape = [1, 2+Math.floor(Math.random()*2), 2+Math.floor(Math.random()*2)];
+                this.shift = [Math.random().toFixed(2), 0, Math.random().toFixed(2)];
+                this.rotation = [0, 0, 0];
+                this.fov = Math.random()*80+20;
+                this.num.textContent = "shape : "+this.shape.slice(1).join(", ");
+                await renderCubes(this.canvas, this.fov, true, this.shape, this.shift, this.rotation);
+                
+            }
+
+            async showCubes(){
+                await renderCubes(this.canvas, this.fov, false, this.shape, this.shift, this.rotation);
+            }
+
+            addEventListeners(){
+                this.next.addEventListener("touchstart", async(e)=>await this.goNext());
+                this.show.addEventListener("touchstart", async(e)=>await this.showCubes());
+            }
+        }
+
+        let fifthExercice = new DrawSquare();
+        fifthExercice.hidden(true);
+        drawSquareButton.addEventListener("touchstart", e=>{
+            exercices.forEach(exercice => exercice.hidden(true));
+            fifthExercice.hidden(false);
+        });
+
+        exercices.push(fifthExercice);
+
+
+        let drawCubeButton = document.querySelector(".draw-cube");
+
+        class DrawCube{
+            constructor(){
+                this.canvas = document.querySelector(".exercice-draw-cubes-canvas");
+                this.canvas2 = document.querySelector(".exercice-draw-cubes-canvas2");
+                this.ctx2 = this.canvas2.getContext("2d");
+                this.canvases = document.querySelector(".exercice-draw-cubes-canvases");
+                this.dims = null;
+                this.wrapper = document.querySelector(".exercice-draw-cubes");
+                this.num = document.querySelector(".exercice-draw-cubes-shape");
+                this.next = document.querySelector(".exercice-draw-cubes-next");
+                this.show = document.querySelector(".exercice-draw-cubes-show");
+                this.drawing = false;
+                this.lastPoint = null;
+                this.z = 6;
+                this.lastLen = null;
+                
+                this.shape = [1, 2, 2];
+                this.shift = [0, 0, 0];
+                this.rotation = [0, 0.3, 0];
+                this.fov = 100;
+                this.canvasListen();
+                this.addEventListeners();
+                this.drawFirst = false;
+                this.thickness = 1;
+            }
+
+            hidden(h){
+                console.log("six exercice ", h);
+                this.wrapper.style.display = h?"none":"block";
+            }
+
+            hidden_(){
+                return this.wrapper.style.display == "none";
+            }
+
+            canvasListen(){
+                this.dims = this.canvas.getBoundingClientRect();
+                
+                let len = Math.min(window.innerWidth, window.innerHeight);
+                
+                this.canvases.style.width = len+"px";
+                this.canvases.style.height = len+"px";
+
+                this.canvas2.style.width = len+"px";
+                this.canvas2.style.height = len+"px";
+                this.canvas2.width = len;
+                this.canvas2.height = len;
+
+                this.canvas.style.width = len+"px";
+                this.canvas.style.height = len+"px";
+                this.canvas.width = len;
+                this.canvas.height = len;
+                this.canvas.style.backgroundColor = 'transparent';
+
+                this.dims = this.canvas.getBoundingClientRect();
+
+                this.canvas2.addEventListener("touchstart", e=>{
+                    console.log("pointer down");
+                    this.drawing = true;
+                    this.lastPoint = [e.clientX, e.clientY];
+                    if(e.touches.length == 2){
+                        this.lastLen = getDistance(e.touches);
+                    }
+                });
+                this.canvas2.addEventListener("touchmove", async(e)=>{
+                    if(!this.drawing) return;
+                    if(e.touches.length == 2){
+                        let len = getDistance(e.touches);
+                        if(this.lastLen != null){
+                            let lenComparison = len - this.lastLen;
+                            this.z -= lenComparison*10/this.dims.width;
+                            await renderCubes(this.canvas, this.fov, this.drawFirst, this.shape, this.shift, this.rotation, this.z);
+                        }
+                        this.lastLen = len;
+                        return;
+                    }
+                    this.ctx2.fillStyle = "green";
+                    let len = Math.sqrt(Math.pow(e.touches[0].clientY - this.lastPoint[1], 2)+Math.pow(e.touches[0].clientX - this.lastPoint[0], 2));
+                    len = Math.ceil(len)
+                    const touch = e.touches[0];
+                    let vec = [(touch.clientX - this.lastPoint[0])/len, (touch.clientY - this.lastPoint[1])/len];
+                    
+                    for(let i=0; i<Math.ceil(len); i++){
+                        this.ctx2.fillRect(this.lastPoint[0] + i * vec[0] - this.dims.x, this.lastPoint[1] + i * vec[1] - this.dims.y, this.thickness, this.thickness);
+                    }
+                    this.lastPoint = [touch.clientX, touch.clientY];
+                });
+
+                this.canvas2.addEventListener("touchend", e=>{
+                    this.lastLen = null;
+                    if(!this.drawing) return;
+                    const touch = e.touches[0];
+                    this.ctx2.fillRect(touch.clientX - this.dims.x, touch.clientY - this.dims.y, this.thickness, this.thickness);
+                    
+                    this.lastPoint = [touch.clientX, touch.clientY];
+                    this.drawing = false;
+                });
+
+                window.addEventListener("keydown", async(e)=>{
+                    console.log("keydown ", e);
+                    if(!this.hidden_()){
+                        if(e.ctrlKey && e.key == "ArrowUp"){
+                            e.preventDefault();
+                            this.shift[2] -= 0.3;
+                            await renderCubes(this.canvas, this.fov, this.drawFirst, this.shape, this.shift, this.rotation, this.z);
+                        }
+                        else if(e.ctrlKey && e.key == "ArrowDown"){
+                            e.preventDefault();
+                            this.shift[2] += 0.3;
+                            await renderCubes(this.canvas, this.fov, this.drawFirst, this.shape, this.shift, this.rotation, this.z);
+                       
+                        }
+                        else if(e.key == "ArrowUp"){
+                            e.preventDefault();
+                            this.shift[1] -= 0.3;
+                            await renderCubes(this.canvas, this.fov, this.drawFirst, this.shape, this.shift, this.rotation, this.z);
+                        }
+                        else if(e.key == "ArrowDown"){
+                            e.preventDefault();
+                            this.shift[1] += 0.3;
+                            await renderCubes(this.canvas, this.fov, this.drawFirst, this.shape, this.shift, this.rotation, this.z);
+                        }
+
+                        else if(e.key == "ArrowRight"){
+                            e.preventDefault();
+                            this.shift[0] -= 0.3;
+                            await renderCubes(this.canvas, this.fov, this.drawFirst, this.shape, this.shift, this.rotation, this.z);
+                        }
+                        else if(e.key == "ArrowLeft"){
+                            e.preventDefault();
+                            this.shift[0] += 0.3;
+                            await renderCubes(this.canvas, this.fov, this.drawFirst, this.shape, this.shift, this.rotation, this.z);
+                        }
+                    }
+                })
+            }
+
+            async goNext(){
+                this.drawFirst = true;
+                this.ctx2.clearRect(0, 0, this.dims.width, this.dims.height);
+                this.shape = [2+Math.floor(Math.random()*3), 2+Math.floor(Math.random()*3), 2+Math.floor(Math.random()*3)];
+                this.shift = [Math.random(), Math.random(), Math.random()*3];
+                this.rotation = [-Math.PI + Math.random()*2*Math.PI,-Math.PI + Math.random()*2*Math.PI, -Math.PI + Math.random()*2*Math.PI];
+                this.fov = 100;
+                this.num.textContent = "shape : "+this.shape.join(", ");
+                await renderCubes(this.canvas, this.fov, this.drawFirst, this.shape, this.shift, this.rotation, this.z);
+                console.log(this.shift);
+            }
+
+            async showCubes(){
+                this.drawFirst = false;
+                await renderCubes(this.canvas, this.fov, this.drawFirst, this.shape, this.shift, this.rotation, this.z);
+            }
+
+            addEventListeners(){
+                this.next.addEventListener("click", async(e)=>await this.goNext());
+                this.show.addEventListener("click", async(e)=>await this.showCubes());
+            }
+        }
+
+        let sixthExercice = new DrawCube();
+        sixthExercice.hidden(true);
+        drawCubeButton.addEventListener("click", e=>{
+            exercices.forEach(exercice => exercice.hidden(true));
+            sixthExercice.hidden(false);
+            sixthExercice.dims = sixthExercice.canvas.getBoundingClientRect();
+        });
+
+        exercices.push(sixthExercice);
+
+    </script>
+</body>
+</html>

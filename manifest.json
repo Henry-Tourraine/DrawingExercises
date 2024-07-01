@@ -1,0 +1,17 @@
+{
+    "name": "Three.js Fullscreen Example",
+    "short_name": "ThreeJS",
+    "description": "An example PWA using Three.js",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#0a84ff",
+    "icons": [
+      {
+        "src": "/assets/pen.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+  
